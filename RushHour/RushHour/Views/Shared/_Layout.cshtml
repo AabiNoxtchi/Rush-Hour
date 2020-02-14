@@ -1,0 +1,65 @@
+﻿ 
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Rush Hour</title>
+    <link href="~/Content/Modal.css" rel="stylesheet" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.css" rel="stylesheet" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.print.css" rel="stylesheet" media="print" />
+    <link href="~/Content/jquery.datetimepicker.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/jquery.datetimepicker.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
+
+</head>
+<body>
+    <div>
+        <table>
+            <tr>
+                <td>
+                    <h1 style="font-size:26px;">Rush Hour</h1>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <ul style="list-style:none;">
+
+                        <li style="float: left; width: 150px; text-decoration: none; color: black;"><a href="@Url.Action("Index", "Activities")">Activities</a></li>
+                        <li style="float: left; width: 150px; text-decoration: none; color: black;"><a href="@Url.Action("Index", "Appointments")">My Appointments</a></li>
+                        @if (RushHour.Models.AuthenticationManager.LoggedUser == null)
+                        {
+                            <li style="float: left; width: 150px; text-decoration: none; color: black;"><a href="@Url.Action("Register", "Home")">Register</a></li>
+                            <li style="float: left; width: 150px; text-decoration: none; color: black;"><a href="@Url.Action("Login", "Home")">Login</a></li>
+                        }
+                        else
+                        {
+                            if (RushHour.Models.AuthenticationManager.LoggedUser.IsAdmin)
+                            {
+                                <li style="float: left; width: 150px; text-decoration: none; color: black;"><a href="@Url.Action("Index", "Users")">Users</a></li>
+                            }
+                            <li style="float: left; width: 150px; text-decoration: none; color: black;"><a href="@Url.Action("EditProfile", "Users")">@RushHour.Models.AuthenticationManager.LoggedUser.Name</a></li>
+                            <li style="float: left; width: 150px; text-decoration: none; color: black;"><a href="@Url.Action("Logout", "Home")">Logout</a></li>
+                        }
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <br/>
+                    @RenderBody()
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script>
+        jQuery('.DateTimePicker').datetimepicker({
+            format: 'm/d/Y H:i',
+            inline: false,
+            lang: 'en'            
+        });
+    </script>
+</body>
+</html>

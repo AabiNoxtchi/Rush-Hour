@@ -1,0 +1,49 @@
+﻿@model RushHour.ViewModels.Users.EditVM
+@{
+    ViewBag.Title = "Edit User " + Model.Id;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    string actionLink = (string)this.ViewContext.RouteData.Values["action"];
+}
+@using (Html.BeginForm(actionLink, "Users", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.Email)
+    @Html.HiddenFor(model => model.IsAdmin)
+    @Html.HiddenFor(model => model.ActivationCode)
+    @Html.HiddenFor(model => model.IsEmailVerified)
+
+<fieldset>
+    <legend>@ViewBag.Title</legend>
+    @Html.ValidationMessage("", new { style = "color: red;" })
+    <table>
+        <tr>
+            <td>@Html.LabelFor(model => model.Name)</td>
+            <td>@Html.TextBoxFor(model => model.Name) @Html.ValidationMessageFor(model => model.Name, null, new { style = "color: red;" })</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(model => model.Phone)</td>
+            <td>@Html.TextBoxFor(model => model.Phone) @Html.ValidationMessageFor(model => model.Phone, null, new { style = "color: red;" })</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(model => model.Email)</td>
+            <td>@Html.TextBoxFor(model => model.Email, new { @readonly = "readonly", style = "width : 200px" })</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(model => model.Password)</td>
+            <td>@Html.PasswordFor(model => model.Password) @Html.ValidationMessageFor(model => model.Password, null, new { style = "color: red;" })</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(model => model.ConfirmPassword)</td>
+            <td>@Html.PasswordFor(model => model.ConfirmPassword) @Html.ValidationMessageFor(model => model.ConfirmPassword, null, new { style = "color: red;" })</td>
+        </tr>
+        <tr>
+            <td colspan="2"><input type="submit" value="Save" />&nbsp;<a href="@Url.Action("Index", "Users")">Cancel</a></td>
+        </tr>
+    </table>
+</fieldset>
+}

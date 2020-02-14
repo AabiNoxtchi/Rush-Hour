@@ -1,0 +1,78 @@
+﻿@model RushHour.ViewModels.Activities.IndexVM
+
+@{
+    ViewBag.Title = "Rush Hour";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{ Html.RenderPartial("/Views/Shared/IndexFilterPartial.cshtml", Model.Filter); }
+
+<br />
+@if (RushHour.Models.AuthenticationManager.LoggedUser.IsAdmin)
+{
+    <a href="@Url.Action("Edit", "Activities")">Create new</a>
+
+}
+
+
+<table>
+
+    <tr>
+
+        <td><a href="@Url.Action("Index","Activities")?OrderBy.Name=name">Name</a></td>
+        <td><a href="@Url.Action("Index","Activities")?OrderBy.Duration=duration">Duration</a></td>
+        <td><a href="@Url.Action("Index","Activities")?OrderBy.Price=price">Price</a></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    @foreach (var item in Model.Items)
+    {
+        <tr>
+
+            <td>@item.Name</td>
+            <td>@item.Duration h</td>
+            <td>@String.Format("{0:C}", item.Price)</td>
+            @if (RushHour.Models.AuthenticationManager.LoggedUser.IsAdmin)
+            {
+                <td><a href="@Url.Action("Index")?AppointmentsIndexVM.Filter.ActivityId=@item.Id">details</a></td>
+                <td><a href="@Url.Action("Edit", "Activities", new { Id = item.Id })">edit</a></td>
+                <td><a href="@Url.Action("Delete", "Activities", new { Id = item.Id })">delete</a></td>
+            }
+
+            <td colspan="3"><a href="@Url.Action("Edit", "Appointments", new { ActivityId = item.Id })">Take Appointment</a></td>
+
+        </tr>
+    }
+</table>
+
+<br />
+
+@{ Html.RenderPartial("/Views/Shared/PagerPartial.cshtml", Model.Pager); }
+<br /><br />
+
+<hr />
+
+@if (RushHour.Models.AuthenticationManager.LoggedUser.IsAdmin)
+{
+    <h3>Appointments</h3>
+    <br />
+     Html.RenderPartial("/Views/Shared/IndexFilterPartial.cshtml", Model.AppointmentsIndexVM.Filter); 
+    <table>
+        <tr>
+            <td><a href="@Url.Action("Index")?AppointmentsIndexVM.OrderBy.Title=title">Title</a></td>
+            <td><a href="@Url.Action("Index")?AppointmentsIndexVM.OrderBy.StartDateTime">Start Date</a></td>
+            <td><a href="@Url.Action("Index")?AppointmentsIndexVM.OrderBy.EndDateTime">End Date</a></td>
+        </tr>
+        @foreach (Appointment item in Model.AppointmentsIndexVM.Items)
+        {
+            <tr>
+                <td>@item.Title</td>
+                <td>@item.StartDateTime</td>
+                <td>@item.EndDateTime</td>
+            </tr>
+        }
+
+    </table>
+     Html.RenderPartial("/Views/Shared/PagerPartial.cshtml", Model.AppointmentsIndexVM.Pager); 
+}

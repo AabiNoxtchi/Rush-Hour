@@ -1,0 +1,104 @@
+﻿@model RushHour.ViewModels.Appointments.IndexVM
+@{
+    ViewBag.Title = "Rush Hour";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (RushHour.Models.AuthenticationManager.LoggedUser.IsAdmin && Model.user != null)
+{
+    <p>
+        User Name: @Model.user.Name <br />
+        Email: @Model.user.Email <br />
+    </p>
+}
+<hr />
+
+
+@{ Html.RenderPartial("/Views/Shared/IndexFilterPartial.cshtml", Model.Filter); }
+<br />
+
+<div id="parent-calendar" style="width:800px;">
+    <div id="calender"></div>
+    <div class="overlay"></div>
+    <div class="modal">
+        <h2 id="Title"></h2>
+        <p id="Details"><p />
+
+        <button class="btn edit">Edit</button>
+        <button class="btn delete">Delete</button>
+        <button class="btn close">Close</button>
+    </div>
+</div>
+
+<script>
+
+
+        var selectedAppointmentId;
+
+        var events =[];
+          @foreach (var appointment in Model.Items)
+          {
+
+                @:events.push({ Id:@appointment.Id , start : '@appointment.StartDateTime.ToString("yyyy/MM/dd hh:mm tt")' , end : '@appointment.EndDateTime.ToString("yyyy/MM/dd hh:mm")' , title : "@appointment.Title" });
+
+          }
+
+            GenerateCalender(events);
+
+            function GenerateCalender(events) {
+                $('#calender').fullCalendar('destroy');
+                $('#calender').fullCalendar({ 
+                    contentHeight: 450,                  
+                    defaultDate: new Date(),
+                    timeFormat: 'h(:mm)a',
+                    header: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: ''
+                    },
+                    
+                    eventLimit: true,
+                    eventColor: '#378006',
+                    events: events,
+
+                    eventClick: function (calEvent, jsEvent, view) {
+                        $('.modal #Title').text(calEvent.title);
+                        $('#Details').text("");
+                        var $description = $('#Details');
+                        $description.append($('<p/>').html('<b>Start:</b>' + calEvent.start.format("DD-MMM-YYYY HH:mm")));@{ }
+                        if (calEvent.end != null) {
+                            $description.append($('<p/>').html('<b>End:</b>' + calEvent.end.format("DD-MMM-YYYY HH:mm")));@{ }
+                        }
+
+                        $('#modal #Details').empty().html($description);
+                        selectedAppointmentId = calEvent.Id;
+                        $(".overlay, .modal").addClass("active");
+
+                    }
+
+                })
+
+            $(".close").on("click", function () {
+                $(".overlay, .modal").removeClass("active");
+
+            });
+
+            $(document).keyup(function (e) {
+                if (e.keyCode === 27) {
+                    $(".overlay, .modal").removeClass("active");
+
+                }
+                });
+
+                $(".delete,.edit").on("click", function () {
+                    var text = $(this).text();
+                 var link = "/@this.ViewContext.RouteData.Values["controller"]/"+text+"?Id="+selectedAppointmentId ;
+
+                  window.location.href = link;
+
+                });
+
+        }
+</script>
+
+

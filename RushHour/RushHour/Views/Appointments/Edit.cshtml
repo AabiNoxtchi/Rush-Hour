@@ -1,0 +1,48 @@
+﻿@model RushHour.ViewModels.Appointments.EditVM
+
+@{
+    ViewBag.Title = "Rush Hour";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@using (Html.BeginForm("Edit", "Appointments", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()   
+   
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.UserId)
+    @Html.HiddenFor(model => model.ActivityId)
+    @Html.HiddenFor(model => model.RowVersion)
+<fieldset>
+    <legend>@(Model.Id > 0 ? "Edit" : "New") Appointment</legend>
+    @Html.ValidationMessage("", new { style = "color: red;" })
+    <table>
+
+        <tr>
+            <td>@Html.LabelFor(model => model.Title)</td>
+            <td>@Html.TextBoxFor(model => model.Title)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(model => model.StartDateTime)</td>
+
+            <td>
+                @Html.TextBoxFor(model => model.StartDateTime, new { @class = "DateTimePicker" })
+                @Html.ValidationMessageFor(model => model.StartDateTime)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.LabelFor(model => model.EndDateTime)
+            </td>
+            <td>
+                @Html.DisplayTextFor(model => model.EndDateTime)
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="2"><input type="submit" value="Save" />&nbsp;<a href="@Url.Action("Index")">Cancel</a></td>
+        </tr>
+    </table>
+</fieldset>
+}

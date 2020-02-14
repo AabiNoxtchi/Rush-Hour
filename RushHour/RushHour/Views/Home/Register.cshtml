@@ -1,0 +1,63 @@
+﻿
+@model RushHour.ViewModels.Home.RegisterVM
+
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (Convert.ToBoolean(Model.statusVM.status))
+{
+    if (Model.statusVM.message != null)
+    {
+        <p>
+            Success : @Model.statusVM.message @Model.Email
+        </p>
+     
+    }
+}
+else
+{
+    using (Html.BeginForm("Register", "Home", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+
+        @Html.HiddenFor(Model => Model.statusVM.status)
+        @Html.HiddenFor(Model => Model.statusVM.message)
+        <fieldset>
+            <legend> Register</legend>
+            <table>
+                <tr>
+                    <td>@Html.LabelFor(model => model.Name)</td>
+                    <td>@Html.TextBoxFor(model => model.Name) @Html.ValidationMessageFor(model => model.Name, null, new { style = "color: red;" })</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(model => model.Phone)</td>
+                    <td>@Html.TextBoxFor(model => model.Phone)
+
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(model => model.Email)</td>
+                    <td>
+                        @Html.TextBoxFor(model => model.Email, new { style = "width : 200px" }) @Html.ValidationMessageFor(model => model.Email, null, new { style = "color: red;" })
+                        @Html.ValidationMessage("EmailExist", new { style = "color: red;" })
+                    </td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(model => model.Password)</td>
+                    <td>@Html.PasswordFor(model => model.Password) @Html.ValidationMessageFor(model => model.Password, null, new { style = "color: red;" })</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(model => model.ConfirmPassword)</td>
+                    <td>@Html.PasswordFor(model => model.ConfirmPassword) @Html.ValidationMessageFor(model => model.ConfirmPassword, null, new { style = "color: red;" })</td>
+                </tr>
+                <tr>
+                    <td colspan="2"><input type="submit" value="Save" />&nbsp;<a href="@Url.Action("Index", "Home")">Cancel</a></td>
+                </tr>
+            </table>
+        </fieldset>
+
+    }
+}
+

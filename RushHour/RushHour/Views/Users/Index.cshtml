@@ -1,0 +1,31 @@
+﻿@model RushHour.ViewModels.Users.IndexVM
+
+@{
+    ViewBag.Title = "Rush Hour";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{ Html.RenderPartial("/Views/Shared/IndexFilterPartial.cshtml", Model.Filter); }
+
+<table>
+    <tr>
+        <td><a href="@Url.Action("Index","Users")?OrderBy.Name=name">Name</a></td>
+        <td><a href="@Url.Action("Index","Users")?OrderBy.Email=email">Email</a></td>
+        <td>Phone Number</td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    @foreach (var item in Model.Items)
+    {
+    <tr>
+        <td>@item.Name</td>
+        <td>@item.Email</td>
+        <td>@item.Phone</td>
+        <td><a href="@Url.Action("Index", "Appointments")?Filter.UserId=@item.Id">details</a></td>
+        <td><a href="@Url.Action("Edit", "Users", new { Id = item.Id })">edit</a></td>
+        <td><a href="@Url.Action("Delete", "Users", new { Id = item.Id })">delete</a></td>
+    </tr>
+    }
+</table>
+@{ Html.RenderPartial("/Views/Shared/PagerPartial.cshtml", Model.Pager); }
